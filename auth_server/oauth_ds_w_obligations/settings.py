@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 from pathlib import Path
 from . import jwt_generator
 import os
+from urllib.parse import urlparse
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -25,12 +26,14 @@ SECRET_KEY = 'django-insecure-d!o-c^wvw*s6w*etp$m=8r282#frg4j%5q%h*l!nnq49658m#%
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+NGROK_URL = os.environ.get('NGROK_URL', 'http://127.0.0.1')
+SESSION_COOKIE_DOMAIN = urlparse(NGROK_URL).hostname
 
 ALLOWED_HOSTS = [
-    '127.0.0.1',
-    'localhost',
-    '60a9-82-194-153-208.ngrok-free.app',
-    '192.168.0.65'
+    #'127.0.0.1',
+    #'localhost',
+    SESSION_COOKIE_DOMAIN,
+    #'192.168.0.65'
 
 ]
 
@@ -138,7 +141,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 FORCE_SCRIPT_NAME = '/auth'
 LOGIN_URL = '/auth/admin/login/'
 LOGIN_REDIRECT_URL = '/auth/o/authorize/'
-CSRF_TRUSTED_ORIGINS = [ "https://60a9-82-194-153-208.ngrok-free.app",]
+CSRF_TRUSTED_ORIGINS = [ NGROK_URL,]
 
 
 
@@ -157,4 +160,3 @@ JWT_PRIVATE_KEY = open('oauth_ds_w_obligations/keys/private.pem').read()
 JWT_ALGORITHM = 'RS256'
 SESSION_COOKIE_SAMESITE = None
 SESSION_COOKIE_SECURE =  True
-SESSION_COOKIE_DOMAIN = '60a9-82-194-153-208.ngrok-free.app'

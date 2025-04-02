@@ -8,7 +8,6 @@ from django.conf import settings as settings
 import urllib.parse
 import base64
 import hashlib
-import urllib.parse
 import requests
 import os
 
@@ -34,11 +33,11 @@ def oauth_callback(request):
         return JsonResponse({'error': 'No authorization code provided'}, status=400)
     code_verifier = request.session.get('pkce_verifier')
     print("code_verifier CALLBACK", code_verifier)
-    token_url = 'https://60a9-82-194-153-208.ngrok-free.app/auth/o/token/'  # Adjust to your auth server URL
+    token_url = f"{settings.NGROK_URL}/auth/o/token/"  # Adjust to your auth server URL
     payload = {
         'grant_type': 'authorization_code',
         'code': code,
-        'redirect_uri': 'https://60a9-82-194-153-208.ngrok-free.app/client/oauth/callback/',
+        'redirect_uri': f"{settings.NGROK_URL}/client/oauth/callback/",
         'client_id': settings.OAUTH_CLIENT_ID,
         'client_secret': settings.OAUTH_CLIENT_SECRET,
         # If using PKCE, include 'code_verifier'
@@ -69,7 +68,7 @@ def client_home(request):
         return JsonResponse({'error': 'No access token. Please authenticate.'}, status=401)
 
     headers = {'Authorization': f'Bearer {access_token}'}
-    resource_response = requests.get('https://60a9-82-194-153-208.ngrok-free.app/resource/api/photos/', headers=headers)
+    resource_response = requests.get(f"{settings.NGROK_URL}/resource/api/photos/", headers=headers)
     try:
         data = resource_response.json()
     except Exception:
@@ -86,13 +85,13 @@ def oauth_login(request):
     print("Session key after storing code_verifier:", request.session.session_key)
     #print("code_verifier", code_verifier)
     # The auth server's authorization endpoint
-    auth_url = "https://60a9-82-194-153-208.ngrok-free.app/auth/o/authorize/"
+    auth_url = f"{settings.NGROK_URL}/auth/o/authorize/"
 
     # Prepare the query parameters (make sure these match your client registration)
     params = {
         'response_type': 'code',
         'client_id': settings.OAUTH_CLIENT_ID,  # Your registered client ID
-        'redirect_uri': 'https://60a9-82-194-153-208.ngrok-free.app/client/oauth/callback/',
+        'redirect_uri': f"{settings.NGROK_URL}/client/oauth/callback/",
         'scope': 'read',  # Or another scope you have defined
         #'code_challenge': code_challenge,
         #'code_challenge_method': 'S256',

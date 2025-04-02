@@ -11,7 +11,8 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
-
+import os
+from urllib.parse import urlparse
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -25,11 +26,13 @@ SECRET_KEY = 'django-insecure-hhkp)t0+jcdw9sqh1dc6%h&jl(_#t4j6fjp0lne%g+j+yl0v%d
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+NGROK_URL = os.environ.get('NGROK_URL', 'http://127.0.0.1')
+SESSION_COOKIE_DOMAIN = urlparse(NGROK_URL).hostname
 ALLOWED_HOSTS = [
-    '127.0.0.1',
-    'localhost',
-    '60a9-82-194-153-208.ngrok-free.app',
-    '192.168.0.65'
+    #'127.0.0.1',
+    #'localhost',
+    SESSION_COOKIE_DOMAIN,
+    #'192.168.0.65'
 
 ]
 
@@ -139,7 +142,9 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 SESSION_COOKIE_SAMESITE = None
 SESSION_COOKIE_SECURE =  True
-SESSION_COOKIE_DOMAIN = '60a9-82-194-153-208.ngrok-free.app'
+
+NGROK_URL = os.environ.get('NGROK_URL', 'http://127.0.0.1')
+SESSION_COOKIE_DOMAIN = urlparse(NGROK_URL).hostname
 
 # Or if necessary, use 'None' (remember to set SESSION_COOKIE_SECURE=True if you do so)
 USE_X_FORWARDED_HOST = True

@@ -11,7 +11,8 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
-
+from urllib.parse import urlparse
+import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -25,11 +26,15 @@ SECRET_KEY = 'django-insecure-lyo(+5&g+-fwojm1=%jfnh7_8-#f3pdrh27l9qj@w8%z1u2dy#
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+
+NGROK_URL = os.environ.get('NGROK_URL', 'http://127.0.0.1')
+SESSION_COOKIE_DOMAIN = urlparse(NGROK_URL).hostname
+
 ALLOWED_HOSTS = [
-    '127.0.0.1',
-    'localhost',
-    '60a9-82-194-153-208.ngrok-free.app',
-    '192.168.0.65'
+    #'127.0.0.1',
+    #'localhost',
+    SESSION_COOKIE_DOMAIN,
+    #'192.168.0.65'
 
 ]
 
