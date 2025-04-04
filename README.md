@@ -1,3 +1,4 @@
+!!YOU MUST MANUALLY CHANGE THE REDIRECT URL ON THE APPLICATIONS PAGE (AUTH ADMIN)
 for deployment:
   in case it gives errors , try to delete all of the images/containers and build again (docker-compose up --build)
 
