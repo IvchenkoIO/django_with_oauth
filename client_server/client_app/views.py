@@ -82,6 +82,7 @@ def oauth_login(request):
     ##request.session['pkce_verifier'] = code_verifier
     ##request.session.modified = True
     ##request.session.save()
+    print(settings.NGROK_URL)
     print("Session key after storing code_verifier:", request.session.session_key)
     #print("code_verifier", code_verifier)
     # The auth server's authorization endpoint

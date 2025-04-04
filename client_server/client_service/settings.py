@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 from pathlib import Path
 import os
 from urllib.parse import urlparse
+import requests
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -26,11 +27,30 @@ SECRET_KEY = 'django-insecure-hhkp)t0+jcdw9sqh1dc6%h&jl(_#t4j6fjp0lne%g+j+yl0v%d
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-NGROK_URL = os.environ.get('NGROK_URL', 'http://127.0.0.1')
+
+
+def get_ngrok_url():
+    try:
+        response = requests.get("http://ngrok:4040/api/tunnels")
+        # Debug: print the response text
+        print("Response from ngrok API:", response.text)
+        data = response.json()
+        tunnels = data.get('tunnels', [])
+        if tunnels:
+            # For simplicity, use the first tunnel's public_url
+            return tunnels[0].get('public_url')
+        else:
+            print("No tunnels found in the response.")
+    except Exception as e:
+        print("Error fetching ngrok URL:", e)
+    return None
+
+
+NGROK_URL = get_ngrok_url()
 SESSION_COOKIE_DOMAIN = urlparse(NGROK_URL).hostname
 ALLOWED_HOSTS = [
     #'127.0.0.1',
-    #'localhost',
+    'localhost',
     SESSION_COOKIE_DOMAIN,
     #'192.168.0.65'
 
@@ -143,8 +163,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 SESSION_COOKIE_SAMESITE = None
 SESSION_COOKIE_SECURE =  True
 
-NGROK_URL = os.environ.get('NGROK_URL', 'http://127.0.0.1')
-SESSION_COOKIE_DOMAIN = urlparse(NGROK_URL).hostname
+##NGROK_URL = os.environ.get('NGROK_URL', 'http://127.0.0.1')
+##SESSION_COOKIE_DOMAIN = urlparse(NGROK_URL).hostname
 
 # Or if necessary, use 'None' (remember to set SESSION_COOKIE_SECURE=True if you do so)
 USE_X_FORWARDED_HOST = True

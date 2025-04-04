@@ -5,8 +5,9 @@ services:
     build:
       context: ./auth_server
     container_name: auth_server
-    environment:
-      - NGROK_URL=${NGROK_URL}
+    depends_on:
+      ngrok:
+        condition: service_healthy
     ports:
       - "8000:8000"
     networks:
@@ -16,8 +17,9 @@ services:
     build:
       context: ./client_server
     container_name: client_server
-    environment:
-      - NGROK_URL=${NGROK_URL}
+    depends_on:
+      ngrok:
+        condition: service_healthy
     ports:
       - "8002:8002"
     networks:
@@ -27,8 +29,9 @@ services:
     build:
       context: ./resource_server
     container_name: resource_server
-    environment:
-      - NGROK_URL=${NGROK_URL}
+    depends_on:
+      ngrok:
+        condition: service_healthy
     ports:
       - "8001:8001"
     networks:
@@ -37,15 +40,18 @@ services:
   proxy:
     build:
       context: ./proxy
-    environment:
-      - NGROK_URL=${NGROK_URL}
     container_name: proxy
     ports:
       - "80:80"
     depends_on:
-      - auth_server
-      - client_server
-      - resource_server
+      auth_server:
+        condition: service_started
+      client_server:
+        condition: service_started
+      resource_server:
+         condition: service_started
+      ngrok:
+        condition: service_healthy
     networks:
       - backend
 
@@ -55,8 +61,11 @@ services:
     command: ["ngrok", "http", "proxy:80"]
     ports:
       - "4040:4040"
-    depends_on:
-      - proxy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:4040/api/tunnels"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
     environment:
       - NGROK_AUTHTOKEN=2v3ZWz3NM29Og9xBtkwuxNq5DJ4_2ZJuHHeLcVhAmGEgHcLqq
     networks:

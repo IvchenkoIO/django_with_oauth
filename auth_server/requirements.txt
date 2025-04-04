@@ -2,6 +2,7 @@ django
 django-extensions
 django-oauth-toolkit
 django-sslserver
+requests
 PyJWT
 gunicorn
 cryptography

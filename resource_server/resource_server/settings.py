@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 from pathlib import Path
 from urllib.parse import urlparse
 import os
+import requests
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -27,12 +28,28 @@ SECRET_KEY = 'django-insecure-lyo(+5&g+-fwojm1=%jfnh7_8-#f3pdrh27l9qj@w8%z1u2dy#
 DEBUG = True
 
 
-NGROK_URL = os.environ.get('NGROK_URL', 'http://127.0.0.1')
+def get_ngrok_url():
+    try:
+        response = requests.get("http://ngrok:4040/api/tunnels")
+        # Debug: print the response text
+        print("Response from ngrok API:", response.text)
+        data = response.json()
+        tunnels = data.get('tunnels', [])
+        if tunnels:
+            # For simplicity, use the first tunnel's public_url
+            return tunnels[0].get('public_url')
+        else:
+            print("No tunnels found in the response.")
+    except Exception as e:
+        print("Error fetching ngrok URL:", e)
+    return None
+
+NGROK_URL = get_ngrok_url()
 SESSION_COOKIE_DOMAIN = urlparse(NGROK_URL).hostname
 
 ALLOWED_HOSTS = [
     #'127.0.0.1',
-    #'localhost',
+    'localhost',
     SESSION_COOKIE_DOMAIN,
     #'192.168.0.65'
 

@@ -14,9 +14,26 @@ from pathlib import Path
 from . import jwt_generator
 import os
 from urllib.parse import urlparse
+import requests
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+
+def get_ngrok_url():
+    try:
+        response = requests.get("http://ngrok:4040/api/tunnels")
+        # Debug: print the response text
+        print("Response from ngrok API:", response.text)
+        data = response.json()
+        tunnels = data.get('tunnels', [])
+        if tunnels:
+            # For simplicity, use the first tunnel's public_url
+            return tunnels[0].get('public_url')
+        else:
+            print("No tunnels found in the response.")
+    except Exception as e:
+        print("Error fetching ngrok URL:", e)
+    return None
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
@@ -26,12 +43,12 @@ SECRET_KEY = 'django-insecure-d!o-c^wvw*s6w*etp$m=8r282#frg4j%5q%h*l!nnq49658m#%
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-NGROK_URL = os.environ.get('NGROK_URL', 'http://127.0.0.1')
+NGROK_URL = get_ngrok_url()
 SESSION_COOKIE_DOMAIN = urlparse(NGROK_URL).hostname
 
 ALLOWED_HOSTS = [
     #'127.0.0.1',
-    #'localhost',
+    'localhost',
     SESSION_COOKIE_DOMAIN,
     #'192.168.0.65'
 
