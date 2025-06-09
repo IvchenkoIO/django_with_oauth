@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Select Permissions & Policy</title>
+</head>
+<body>
+  <h1>Select Permissions & Policy Levels</h1>
+  <form method="post">
+    {% csrf_token %}
+    <!-- Pass along OAuth params -->
+    <input type="hidden" name="client_id"     value="{{ client_id }}">
+    <input type="hidden" name="redirect_uri"  value="{{ redirect_uri }}">
+    <input type="hidden" name="response_type" value="{{ response_type }}">
+    <input type="hidden" name="state"         value="{{ state }}">
+
+    <fieldset>
+      <legend>Scopes</legend>
+      {% for code, label in all_scopes.items %}
+        <div>
+          <input
+            type="checkbox"
+            id="scope_{{ code }}"
+            name="scopes"
+            value="{{ code }}"
+            {% if forloop.first %}checked{% endif %}>
+          <label for="scope_{{ code }}">{{ label }}</label>
+        </div>
+      {% endfor %}
+    </fieldset>
+
+    <fieldset>
+      <legend>Policy Levels</legend>
+      {% for data_type, levels in policy_types.items %}
+        <div style="margin-bottom:1em;">
+          <label for="policy_{{ data_type }}">
+            {{ data_type|capfirst }} level:
+          </label>
+          <select name="policy_{{ data_type }}" id="policy_{{ data_type }}">
+            {% for level in levels %}
+              <option value="{{ level }}">{{ level|capfirst }}</option>
+            {% endfor %}
+          </select>
+        </div>
+      {% endfor %}
+    </fieldset>
+
+    <button type="submit">Continue</button>
+  </form>
+</body>
+</html>
