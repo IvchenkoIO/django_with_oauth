@@ -1,0 +1,7 @@
+django
+django-extensions
+requests
+PyJWT
+django-sslserver
+gunicorn
+cryptography

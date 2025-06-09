@@ -1,0 +1,50 @@
+from django.core.management.base import BaseCommand
+from photos.models import Photo, PhotoImage, BiometricData
+from django.core.files.uploadedfile import SimpleUploadedFile
+from django.utils.timezone import make_aware
+from datetime import datetime, timedelta, date
+import random, os
+
+class Command(BaseCommand):
+    help = 'Seed the database with one surgery (Photo) with multiple images and biometric data'
+
+    def handle(self, *args, **kwargs):
+        image_filenames = ['surgery.jpg', 'profile.jpg', 'checkup.jpg']
+
+        # Create the main surgery record (one Photo object)
+        photo = Photo.objects.create(
+            patient_name="John Doe",
+            date_of_birth=date(1990, 5, 10),
+            face_visible=True,
+            blurred=False,
+            dummy_name_used=False
+        )
+
+        # Attach all images to the Photo record
+        for filename in image_filenames:
+            img_path = os.path.join('photos', 'test_assets', filename)
+            if not os.path.exists(img_path):
+                self.stdout.write(self.style.ERROR(f"Image not found: {filename}"))
+                continue
+
+            with open(img_path, 'rb') as img:
+                image_file = SimpleUploadedFile(filename, img.read(), content_type='image/jpeg')
+
+            PhotoImage.objects.create(
+                photo=photo,
+                image=image_file,
+                description=""  # Optional description
+            )
+
+        # Add biometric data (e.g., heart rate readings)
+        base_time = make_aware(datetime(2025, 5, 1, 8, 0))
+        for i in range(288):
+            BiometricData.objects.create(
+                patient=photo,
+                measurement_type='heart_rate',
+                value=random.randint(65, 85),
+                timestamp=base_time + timedelta(minutes=5 * i),
+                averaged_to=None
+            )
+
+        self.stdout.write(self.style.SUCCESS("Data created"))

@@ -1,0 +1,7 @@
+version: 2
+authtoken: 2NNLAJMcN972O31azuWvOxrItgf_38DVawrP6hNrqM1XsixaW
+tunnels:
+  default:
+    addr: proxy:80
+    proto: http
+    hostname: privacyengproj.ngrok.app

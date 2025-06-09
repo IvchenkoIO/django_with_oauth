@@ -1,0 +1,11 @@
+django
+django-extensions
+django-cors-headers
+django-sslserver
+PyJWT
+requests
+gunicorn
+cryptography
+psycopg2-binary
+Pillow
+django-oauth-toolkit

@@ -1,0 +1,125 @@
+version: "3.9"
+
+services:
+  auth_server:
+    build:
+      context: ./auth_server
+    container_name: auth_server
+    ports:
+      - "8000:8000"
+    volumes:
+      - staticfiles:/app/staticfiles
+    depends_on:
+      - ngrok
+    networks:
+      - backend
+    command: >
+      sh -c "
+        sleep 10 &&
+        python manage.py migrate --noinput &&
+        python manage.py collectstatic --noinput &&
+        gunicorn auth_server_django.wsgi:application --bind 0.0.0.0:8000
+      "
+    environment:
+      - NGROK_URL=${NGROK_URL}
+
+
+  client_server:
+    build:
+      context: ./client_server
+    container_name: client_server
+    ports:
+      - "8002:8002"
+    networks:
+      - backend
+    command: ["sh", "-c", "sleep 10 && gunicorn client_service.wsgi:application --bind 0.0.0.0:8002"]
+    environment:
+      - NGROK_URL=${NGROK_URL}
+
+  resource_server:
+    build:
+      context: ./resource_server
+    container_name: resource_server
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "8001:8001"
+    environment:
+      - DB_NAME=resource_db
+      - DB_USER=resource_user
+      - DB_PASSWORD=resource_password
+      - DB_HOST=db
+      - DB_PORT=5432
+      - NGROK_URL=${NGROK_URL}
+    networks:
+      - backend
+    command: ["sh", "-c", "sleep 10 && gunicorn resource_server.wsgi:application --bind 0.0.0.0:8001"]
+    volumes:
+      - ./resource_server:/app
+
+  db:
+    image: postgres:14
+    container_name: resource_db
+    restart: always
+    environment:
+      - POSTGRES_DB=resource_db
+      - POSTGRES_USER=resource_user
+      - POSTGRES_PASSWORD=resource_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U resource_user -d resource_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - backend
+
+  proxy:
+    build:
+      context: ./proxy
+    container_name: proxy
+    ports:
+      - "80:80"
+    depends_on:
+      auth_server:
+        condition: service_started
+      client_server:
+        condition: service_started
+      resource_server:
+        condition: service_started
+    volumes:
+      - staticfiles:/staticfiles
+      - ./proxy/index.html:/etc/nginx/html/index.html:ro
+    networks:
+      - backend
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  ngrok:
+    image: ngrok/ngrok:latest
+    container_name: ngrok
+    restart: unless-stopped
+    command: >
+      http proxy:80
+      --domain=privacyengproj.ngrok.app
+    environment:
+      - NGROK_AUTHTOKEN=2NNLAJMcN972O31azuWvOxrItgf_38DVawrP6hNrqM1XsixaW
+    ports:
+      - "4040:4040"
+    networks:
+      - backend
+
+volumes:
+  staticfiles:
+  postgres_data:
+
+networks:
+  backend:
+    driver: bridge
