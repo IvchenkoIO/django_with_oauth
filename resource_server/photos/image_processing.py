@@ -16,7 +16,7 @@ def get_blurred_image_url(image_path, request):
             buffer.seek(0)
 
             filename = f"blurred_{os.path.basename(image_path)}"
-            blurred_rel_path = os.path.join("blurred", filename)
+            blurred_rel_path = os.path.join("photos", "blurred", filename)
 
             if not default_storage.exists(blurred_rel_path):
                 default_storage.save(blurred_rel_path, ContentFile(buffer.read()))

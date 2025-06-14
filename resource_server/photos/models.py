@@ -14,7 +14,7 @@ class Photo(models.Model):
 
 class PhotoImage(models.Model):
     photo = models.ForeignKey(Photo, on_delete=models.CASCADE, related_name='images')
-    image = models.ImageField(upload_to='photos/')
+    image = models.ImageField(upload_to='originals/')
     description = models.TextField(blank=True)
     uploaded_at = models.DateTimeField(auto_now_add=True)
 
@@ -30,3 +30,5 @@ class BiometricData(models.Model):
 
     def __str__(self):
         return f"{self.measurement_type} at {self.timestamp}"
+
+
