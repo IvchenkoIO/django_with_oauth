@@ -10,6 +10,7 @@ import base64
 import hashlib
 import requests
 import os
+import json
 
 
 def generate_pkce():
@@ -73,7 +74,14 @@ def client_home(request):
         data = resource_response.json()
     except Exception:
         data = {'error': 'Invalid response from resource server'}
-    return JsonResponse(data)
+    
+    data_json = json.dumps(data)
+    print(data_json)
+    return render(request, 'app.html', {
+        'data_json': data_json
+    })
+
+    ##return JsonResponse(data)
 
 
 def oauth_login(request):

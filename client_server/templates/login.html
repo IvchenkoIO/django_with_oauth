@@ -1,0 +1,42 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Login</title>
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      font-family: sans-serif;
+      background: #f5f5f5;
+    }
+    .login-container {
+      text-align: center;
+    }
+    .login-button {
+      padding: 12px 24px;
+      font-size: 1.1rem;
+      cursor: pointer;
+      background: #007bff;
+      border: none;
+      color: white;
+      border-radius: 4px;
+    }
+    .login-button:hover {
+      background: #0056b3;
+    }
+  </style>
+</head>
+<body>
+  <div class="login-container">
+    <h1>Welcome</h1>
+    <form action="/client{% url 'oauth_login' %}" method="get">
+      <button type="submit" class="login-button">Login</button>
+    </form>
+  </div>
+</body>
+</html>
