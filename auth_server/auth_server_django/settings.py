@@ -193,16 +193,15 @@ OAUTH2_PROVIDER = {
     'ACCESS_TOKEN_EXPIRE_SECONDS': 36000,
     'SCOPES': {
         'read': 'Read scope',
-        'write': 'Write scope',
-        'reaaa' :'RW'
+        'partial read': 'Partial read scope',
     },
     'POLICY_LEVELS': {
-        'numerical': ['normal', 'strict'],
-        'images':    ['normal', 'strict'],
-        'text':      ['normal', 'strict'],
+        'numerical (time values) in hrs': ['1','4','8','24'],
+        'images (blur) in %':    ['1', '25', '50', '100'],
+        'text':      ['anonymize', 'remove'],
     },
     # Configure DOT to use your custom token generator.
-    'DEFAULT_SCOPES': ['read', 'write', 'read'],
+    'DEFAULT_SCOPES': ['read'],
     'ACCESS_TOKEN_GENERATOR' : generate_jwt,
     'PKCE_REQUIRED': False,
     # Make sure consent isn’t auto‑skipped

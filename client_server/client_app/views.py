@@ -11,7 +11,8 @@ import hashlib
 import requests
 import os
 import json
-
+from django.shortcuts import redirect
+from django.urls import reverse
 
 def generate_pkce():
     """
@@ -61,12 +62,12 @@ def oauth_callback(request):
         return JsonResponse({'error': 'Failed to obtain token', 'details': token_data}, status=400)
 
     request.session['access_token'] = token_data['access_token']
-    return HttpResponseRedirect('/client/client/')
+    return HttpResponseRedirect('/client/login/')
 
-def client_home(request):
+def client_login(request):
     access_token = request.session.get('access_token')
     if not access_token:
-        return JsonResponse({'error': 'No access token. Please authenticate.'}, status=401)
+        return redirect(f"{settings.NGROK_URL}/client/oauth_login/")  # or wherever makes sense
 
     headers = {'Authorization': f'Bearer {access_token}'}
     resource_response = requests.get(f"{settings.NGROK_URL}/resource/api/photos/", headers=headers)
@@ -82,16 +83,14 @@ def client_home(request):
     })
 
     ##return JsonResponse(data)
-
-
 def oauth_login(request):
     ##code_verifier, code_challenge = generate_pkce()
     # Save the verifier in the session for later use.
     ##request.session['pkce_verifier'] = code_verifier
     ##request.session.modified = True
     ##request.session.save()
-    print(settings.NGROK_URL)
-    print("Session key after storing code_verifier:", request.session.session_key)
+    ##print(settings.NGROK_URL)
+    ##print("Session key after storing code_verifier:", request.session.session_key)
     #print("code_verifier", code_verifier)
     # The auth server's authorization endpoint
     auth_url = f"{settings.NGROK_URL}/auth/auth"
@@ -111,7 +110,3 @@ def oauth_login(request):
 
     return HttpResponseRedirect(full_url)
 
-
-def debug_session(request):
-    request.session['test'] = 'hello'
-    return JsonResponse({'session': dict(request.session.items())})

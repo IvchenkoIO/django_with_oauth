@@ -8,6 +8,7 @@ from collections import defaultdict
 from photos.image_processing import get_blurred_image_url
 import statistics
 
+
 @require_GET
 def protected_photos(request):
     print(">>> photos/views.py version called")

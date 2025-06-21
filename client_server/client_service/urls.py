@@ -17,13 +17,12 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from django.views.generic import TemplateView
-from client_app.views import client_home, oauth_callback, oauth_login, debug_session
+from client_app.views import client_login, oauth_callback, oauth_login
 
 urlpatterns = [
     path('', TemplateView.as_view(template_name='login.html'), name='login'),
     path('admin/', admin.site.urls),
-    path('client/', client_home, name='client_home'),
+    path('login/', client_login, name='client_login'),
     path('oauth/callback/', oauth_callback, name='oauth_callback'),
-    path('login/', oauth_login, name='oauth_login'),
-    path('debug/', debug_session, name='debug'),
-]
+    path('oauth_login/', oauth_login, name='oauth_login'),
+    ]
