@@ -34,7 +34,7 @@
       {% for data_type, levels in policy_types.items %}
         <div style="margin-bottom:1em;">
           <label for="policy_{{ data_type }}">
-            {{ data_type|capfirst }} level:
+            {{ data_type|capfirst }}:
           </label>
           <select name="policy_{{ data_type }}" id="policy_{{ data_type }}">
             {% for level in levels %}

@@ -186,7 +186,6 @@ JWT_ALGORITHM = 'RS256'
 # … your other settings …
 
 # Tells DOT “I’m using the built-in oauth2_provider.Application model”
-#OAUTH2_PROVIDER_APPLICATION_MODEL = "oauth2_provider.Application"
 OAUTH2_PROVIDER_APPLICATION_MODEL = "oauth2_provider.Application"
 OAUTH2_PROVIDER = {
 
@@ -196,9 +195,9 @@ OAUTH2_PROVIDER = {
         'partial read': 'Partial read scope',
     },
     'POLICY_LEVELS': {
-        'numerical (time values) in hrs': ['1','4','8','24'],
-        'images (blur) in %':    ['1', '25', '50', '100'],
-        'text':      ['anonymize', 'remove'],
+        'average numerical values?': ['none', 'hourly', '8-hourly', 'daily'],
+        'blur images?': ['none', 'mild', 'medium', 'heavy'],
+        'transform text?': ['none', 'anonymize', 'remove'],
     },
     # Configure DOT to use your custom token generator.
     'DEFAULT_SCOPES': ['read'],

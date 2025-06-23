@@ -15,9 +15,7 @@ class Command(BaseCommand):
         photo = Photo.objects.create(
             patient_name="John Doe",
             date_of_birth=date(1990, 5, 10),
-            face_visible=True,
             blurred=False,
-            dummy_name_used=False
         )
 
         # Attach all images to the Photo record
@@ -38,7 +36,7 @@ class Command(BaseCommand):
 
         # Add biometric data (e.g., heart rate readings)
         base_time = make_aware(datetime(2025, 5, 1, 8, 0))
-        for i in range(288):
+        for i in range(2000):
             BiometricData.objects.create(
                 patient=photo,
                 measurement_type='heart_rate',
