@@ -14,6 +14,7 @@ from pathlib import Path
 import os
 from urllib.parse import urlparse
 import requests
+from decouple import config
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -47,6 +48,12 @@ def get_ngrok_url():
 
 
 NGROK_URL = get_ngrok_url()
+CLIENT_REDIRECT_URL = f"{NGROK_URL}/client/oauth/callback/"
+TOKEN_URL = f"{NGROK_URL}/auth/o/token/"
+CLIENT_LOGIN_URL = f"{NGROK_URL}/client/oauth_login/"
+RESOURCE_URL = f"{NGROK_URL}/resource/api/photos/"
+AUTH_SERVER_AUTH = f"{NGROK_URL}/auth/auth"
+REQUESTS_VERIFY = config("REQUESTS_VERIFY",cast=bool, default=False)
 SESSION_COOKIE_DOMAIN = urlparse(NGROK_URL).hostname
 ALLOWED_HOSTS = [
     #'127.0.0.1',
@@ -59,14 +66,12 @@ ALLOWED_HOSTS = [
 
 ##OAUTH_CLIENT_ID = 'MiVQQMChpMqHh6HjwCeF60ypWemqj3gExnkng3UB'
 ##OAUTH_CLIENT_SECRET = 'NMcYEz8DTFyF4sx3oRAOyMh1LcfhLhr9Li1tkCb1XRE4KYpCvW6bQbBZwR5pFHBRJCN6wRgx5V6IfMOxGQwALjpEi4A2qA5UIXpt5xF3MhA2Kmc7bVnkTQGgqJwWmjCr'
-OAUTH_CLIENT_ID = 'dILPhaNLlqWtxk3GQ4JOUb1spS790BuKbowuaxj3'
-OAUTH_CLIENT_SECRET = '8OyqNSEKKIVWIuNBqmuI2Y2EFYeA783tgQ7qBIjkHebP6wkvkKQFwmgedgWbmkgO4GNFN56OvQb175ws1zv2dnH9hqcKT8fD0zhW6eHEXj8wzMDEhIwHoTxefBX4NSdN'
 
+#OAUTH_CLIENT_ID = 'dILPhaNLlqWtxk3GQ4JOUb1spS790BuKbowuaxj3'
+#OAUTH_CLIENT_SECRET = '8OyqNSEKKIVWIuNBqmuI2Y2EFYeA783tgQ7qBIjkHebP6wkvkKQFwmgedgWbmkgO4GNFN56OvQb175ws1zv2dnH9hqcKT8fD0zhW6eHEXj8wzMDEhIwHoTxefBX4NSdN'
+OAUTH_CLIENT_ID = config('OAUTH_CLIENT_ID')
+OAUTH_CLIENT_SECRET = config('OAUTH_CLIENT_SECRET')
 
-
-##auth_endpoint = http://127.0.0.1:8000/o/authorize/
-##token_endpoint = http://127.0.0.1:8000/o/token/
-##redirect_url = http://127.0.0.1:8002/oauth/callback/
 
 # Application definition
 
@@ -174,3 +179,18 @@ SESSION_COOKIE_SECURE =  True
 # Or if necessary, use 'None' (remember to set SESSION_COOKIE_SECURE=True if you do so)
 USE_X_FORWARDED_HOST = True
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': 'DEBUG',
+    },
+}
