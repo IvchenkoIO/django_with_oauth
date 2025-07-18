@@ -18,10 +18,13 @@ from django.contrib import admin
 from django.urls import path
 from django.views.generic import TemplateView
 from client_app.views import client_login, oauth_callback, oauth_login
-
+# Routes:
+#   /login/          → oauth_login view
+#   /oauth/callback/ → oauth_callback view
+#   /client/login/   → client_login view
 urlpatterns = [
     path('', TemplateView.as_view(template_name='login.html'), name='login'),
-    path('admin/', admin.site.urls),
+    #path('admin/', admin.site.urls),
     path('login/', client_login, name='client_login'),
     path('oauth/callback/', oauth_callback, name='oauth_callback'),
     path('oauth_login/', oauth_login, name='oauth_login'),

@@ -1,32 +1,43 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <!--
+    app.html: Patient Dashboard template
+    Expects a context variable `data_json` containing:
+      - patient: { name, date of birth }
+      - images: [ { url, blurred } ]
+      - biometrics: [ { timestamp, value or avg_heart_rate } ]
+  -->
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Patient Dashboard</title>
   <!-- Chart.js CDN -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
+    /* Page and card styling */
     body { font-family: Arial, sans-serif; margin: 20px; }
     .card { border: 1px solid #ccc; border-radius: 8px; padding: 16px; margin-bottom: 20px; box-shadow: 2px 2px 8px rgba(0,0,0,0.1); }
+    /* Responsive image gallery grid */
     .gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
     .gallery img { width: 100%; height: auto; border-radius: 4px; }
+    /* Overlay label for blurred images */
     .blur-overlay { position: relative; }
     .blur-overlay .label { position: absolute; bottom: 8px; left: 8px; background: rgba(0,0,0,0.6); color: #fff; padding: 2px 6px; border-radius: 4px; font-size: 12px; }
   </style>
 </head>
 <body>
+  <!-- Patient basic info card -->
   <div class="card" id="patient-info">
     <h2>Patient Information</h2>
     <p><strong>Name:</strong> <span id="patient-name"></span></p>
     <p><strong>Date of Birth:</strong> <span id="patient-dob"></span></p>
   </div>
-
+  <!-- Image gallery card -->
   <div class="card">
     <h2>Image Gallery</h2>
     <div class="gallery" id="image-gallery"></div>
   </div>
-
+  <!-- Biometric timeline chart card -->
   <div class="card">
     <h2>Biometric Timeline</h2>
     <canvas id="biometricChart" height="100"></canvas>
@@ -36,10 +47,15 @@
     // Parse JSON data passed from Django view
     const data = JSON.parse('{{ data_json|escapejs }}');
 
-    // Populate patient info, handling null DOB
+    // ─────────────────────────────────────────
+    // Populate Patient Info
+    // ─────────────────────────────────────────
+    
     document.getElementById('patient-name').textContent = data.patient.name;
     document.getElementById('patient-dob').textContent = data.patient['date of birth'] || 'N/A';
-    // Populate image gallery
+    // ─────────────────────────────────────────
+    // Build Image Gallery
+    // ─────────────────────────────────────────
     const gallery = document.getElementById('image-gallery');
     data.images.forEach(img => {
       const wrapper = document.createElement('div');
@@ -59,7 +75,9 @@
       gallery.appendChild(wrapper);
     });
 
-    // Prepare biometric chart data, supporting both 'value' and 'avg_heart_rate'
+    // ─────────────────────────────────────────
+    // Prepare and Render Biometric Chart
+    // ─────────────────────────────────────────
     const labels = data.biometrics.map(b => {
       return b.timestamp.includes('T')
         ? new Date(b.timestamp).toLocaleTimeString()

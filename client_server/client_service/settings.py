@@ -15,21 +15,26 @@ import os
 from urllib.parse import urlparse
 import requests
 from decouple import config
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
+# ──────────────────────────────────────────────────────────────────────────────
+# Base Directory
+# ──────────────────────────────────────────────────────────────────────────────
+# BASE_DIR points to the project root, used for file paths below
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-hhkp)t0+jcdw9sqh1dc6%h&jl(_#t4j6fjp0lne%g+j+yl0v%d'
-
+## ──────────────────────────────────────────────────────────────────────────────
+# Security & Debug
+# ──────────────────────────────────────────────────────────────────────────────
+# SECRET_KEY must be kept secret in production (consider env var)
+SECRET_KEY = config('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
 
-
+# ──────────────────────────────────────────────────────────────────────────────
+# Dynamic Ngrok URL Fetcher
+# ──────────────────────────────────────────────────────────────────────────────
+# If running behind ngrok in Docker, fetch the public URL from ngrok's API
 def get_ngrok_url():
     try:
         response = requests.get("http://ngrok:4040/api/tunnels")
@@ -46,35 +51,44 @@ def get_ngrok_url():
         print("Error fetching ngrok URL:", e)
     return None
 
-
+# NGROK_URL used to build callbacks and endpoints dynamically
 NGROK_URL = get_ngrok_url()
+# ──────────────────────────────────────────────────────────────────────────────
+# OAuth & Service Endpoints
+# ──────────────────────────────────────────────────────────────────────────────
+# Construct full URLs based on NGROK_URL
 CLIENT_REDIRECT_URL = f"{NGROK_URL}/client/oauth/callback/"
 TOKEN_URL = f"{NGROK_URL}/auth/o/token/"
 CLIENT_LOGIN_URL = f"{NGROK_URL}/client/oauth_login/"
 RESOURCE_URL = f"{NGROK_URL}/resource/api/photos/"
 AUTH_SERVER_AUTH = f"{NGROK_URL}/auth/auth"
+# Toggle SSL verification for requests
 REQUESTS_VERIFY = config("REQUESTS_VERIFY",cast=bool, default=False)
+
+
+# ──────────────────────────────────────────────────────────────────────────────
+# Host & Cookie Settings
+# ──────────────────────────────────────────────────────────────────────────────
+# Derive allowed host and session cookie domain from ngrok URL
 SESSION_COOKIE_DOMAIN = urlparse(NGROK_URL).hostname
 ALLOWED_HOSTS = [
     #'127.0.0.1',
     'localhost',
     SESSION_COOKIE_DOMAIN,
-    #'192.168.0.65'
-
 ]
 
 
-##OAUTH_CLIENT_ID = 'MiVQQMChpMqHh6HjwCeF60ypWemqj3gExnkng3UB'
-##OAUTH_CLIENT_SECRET = 'NMcYEz8DTFyF4sx3oRAOyMh1LcfhLhr9Li1tkCb1XRE4KYpCvW6bQbBZwR5pFHBRJCN6wRgx5V6IfMOxGQwALjpEi4A2qA5UIXpt5xF3MhA2Kmc7bVnkTQGgqJwWmjCr'
-
-#OAUTH_CLIENT_ID = 'dILPhaNLlqWtxk3GQ4JOUb1spS790BuKbowuaxj3'
-#OAUTH_CLIENT_SECRET = '8OyqNSEKKIVWIuNBqmuI2Y2EFYeA783tgQ7qBIjkHebP6wkvkKQFwmgedgWbmkgO4GNFN56OvQb175ws1zv2dnH9hqcKT8fD0zhW6eHEXj8wzMDEhIwHoTxefBX4NSdN'
+# ──────────────────────────────────────────────────────────────────────────────
+# OAuth Client Credentials
+# ──────────────────────────────────────────────────────────────────────────────
+# Load from .env for security
 OAUTH_CLIENT_ID = config('OAUTH_CLIENT_ID')
 OAUTH_CLIENT_SECRET = config('OAUTH_CLIENT_SECRET')
 
 
-# Application definition
-
+# ──────────────────────────────────────────────────────────────────────────────
+# Application Definition
+# ──────────────────────────────────────────────────────────────────────────────
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -98,7 +112,9 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'client_service.urls'
-
+# ──────────────────────────────────────────────────────────────────────────────
+# Templates
+# ──────────────────────────────────────────────────────────────────────────────
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -119,7 +135,9 @@ TEMPLATES = [
 WSGI_APPLICATION = 'client_service.wsgi.application'
 
 
+# ──────────────────────────────────────────────────────────────────────────────
 # Database
+# ──────────────────────────────────────────────────────────────────────────────
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
 DATABASES = {
@@ -130,7 +148,10 @@ DATABASES = {
 }
 
 
-# Password validation
+# ──────────────────────────────────────────────────────────────────────────────
+# Password Validation
+# ──────────────────────────────────────────────────────────────────────────────
+
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
@@ -149,7 +170,10 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
+# ──────────────────────────────────────────────────────────────────────────────
 # Internationalization
+# ──────────────────────────────────────────────────────────────────────────────
+
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
 
 LANGUAGE_CODE = 'en-us'
@@ -161,25 +185,32 @@ USE_I18N = True
 USE_TZ = True
 
 
-# Static files (CSS, JavaScript, Images)
+# ──────────────────────────────────────────────────────────────────────────────
+# Static Files
+# ──────────────────────────────────────────────────────────────────────────────
+
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = 'static/'
 
-# Default primary key field type
+# ──────────────────────────────────────────────────────────────────────────────
+# Default Primary Key Field
+# ──────────────────────────────────────────────────────────────────────────────
+
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 SESSION_COOKIE_SAMESITE = None
 SESSION_COOKIE_SECURE =  True
 
-##NGROK_URL = os.environ.get('NGROK_URL', 'http://127.0.0.1')
-##SESSION_COOKIE_DOMAIN = urlparse(NGROK_URL).hostname
 
 # Or if necessary, use 'None' (remember to set SESSION_COOKIE_SECURE=True if you do so)
 USE_X_FORWARDED_HOST = True
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
+# ──────────────────────────────────────────────────────────────────────────────
+# Logging Configuration
+# ──────────────────────────────────────────────────────────────────────────────
 
 LOGGING = {
     'version': 1,

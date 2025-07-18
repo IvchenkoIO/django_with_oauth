@@ -1,3 +1,6 @@
+
+# Python dependencies frozen for Docker & local development
+
 django
 django-extensions
 requests
