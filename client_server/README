@@ -1,0 +1,51 @@
+# django_with_oauth — Client Service (`client_serv`)
+
+A Django application acting as an **OAuth 2.0 client**, designed to run alongside an authorization server and a resource server in Docker Compose. It handles the Authorization Code flow (with optional PKCE), exchanges codes for tokens, and fetches protected resources.
+
+---
+
+## 🚀 Features
+
+- **OAuth 2.0 Authorization Code flow**  
+- Optional **PKCE** (Proof Key for Code Exchange) support  
+- Secure token exchange and session storage  
+- Fetches protected resources via authenticated HTTP calls  
+- Robust error handling and detailed logging  
+- Simple template rendering of received data  
+- Fully containerized with Docker Compose  
+
+---
+
+## 📦 Prerequisites
+
+- **Docker** (version 20.10+)  
+- **Docker Compose** (version 1.29+)  
+
+---
+
+## 📁 Repository Layout
+
+```text
+django_with_oauth/
+├── auth_server/            # OAuth2 provider & JWT generator
+│   ├── Dockerfile
+│   └── ...
+├── resource_server/        # Protected resource API
+│   ├── Dockerfile
+│   └── ...
+├── client_serv/            # This Django OAuth client
+│   ├── Dockerfile
+│   ├── client_app/
+│   │   ├── views.py        # oauth_login, oauth_callback, client_login
+│   │   └── …
+│   ├── client_server/
+│   │   ├── settings.py     # Loads env vars via python-decouple
+│   │   ├── urls.py         # URL routes
+│   │   └── …
+│   ├── templates/
+│   │   └── app.html        # Renders fetched resource data
+│   ├── requirements.txt
+│   ├── .env.example
+│   └── README.md           # (this file)
+├── docker-compose.yml
+└── LICENSE
