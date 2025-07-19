@@ -29,6 +29,7 @@ client_serv/
 │   └── wsgi.py            # WSGI entrypoint for Gunicorn
 ├── requirements.txt       # Python dependencies
 ├── .env.example           # Example environment variables
+├── .env          		   # environment variables
 ├── manage.py              # Django management script
 └── README.md              # This documentation
 ```
