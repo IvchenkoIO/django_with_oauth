@@ -14,7 +14,7 @@ import statistics
 def protected_photos(request):
     print(">>> photos/views.py version called")
     
-    # Extract JWT
+    # Extract Token
     auth_header = request.META.get('HTTP_AUTHORIZATION')
     if not auth_header or not auth_header.startswith('Bearer '):
         return JsonResponse({'error': 'No token provided'}, status=401)
@@ -25,19 +25,19 @@ def protected_photos(request):
     except InvalidTokenError:
         return JsonResponse({'error': 'Invalid token'}, status=401)
 
-    # Extract authorization parameters
+    # Parameters from Token
     authz = decoded.get("authorization_details", {})
     numerical_level = authz.get("average numerical values?", DEFAULT_HEART_RATE_POLICY)
     image_blur_level = authz.get("blur images?", "none")
     text_privacy_level = authz.get("transform text?", "none")
 
-    # Retrieve latest photo record
+    # Get Photo
     try:
         photo = Photo.objects.latest("id")
     except Photo.DoesNotExist:
         return JsonResponse({"error": "No photo record found"}, status=404)
 
-    # Handle text privacy
+    # Anonymize and remove
     if text_privacy_level == "remove":
         name = None
         dob = None
@@ -48,7 +48,7 @@ def protected_photos(request):
         name = photo.patient_name
         dob = photo.date_of_birth.isoformat() if photo.date_of_birth else None
 
-    # Process image privacy
+    # Image blurring here
     images = []
     for img in photo.images.all():
         if image_blur_level == "none":
@@ -63,7 +63,7 @@ def protected_photos(request):
                 "blurred": True
             })
 
-    # Handle biometric grouping
+    # Grouping and averaging biometrics
     biometric_data = photo.biometrics.order_by("timestamp")
     grouping = HEART_RATE_GROUPING.get(numerical_level, None)
 
@@ -93,8 +93,8 @@ def protected_photos(request):
         ]
     else:
         numerical = group_by_interval(grouping)
-
-    # Final response
+        
+    # Grouping and averaging biometrics
     return JsonResponse({
         "patient": {
             "name": name,

@@ -6,19 +6,21 @@ from datetime import datetime, timedelta, date
 import random, os
 
 class Command(BaseCommand):
-    help = 'Seed the database with one surgery (Photo) with multiple images and biometric data'
 
     def handle(self, *args, **kwargs):
+        """
+        Create sample data
+        """
         image_filenames = ['surgery.jpg', 'profile.jpg', 'checkup.jpg']
 
-        # Create the main surgery record (one Photo object)
+        # Create surgery record
         photo = Photo.objects.create(
             patient_name="John Doe",
             date_of_birth=date(1990, 5, 10),
             blurred=False,
         )
 
-        # Attach all images to the Photo record
+        # Attach images
         for filename in image_filenames:
             img_path = os.path.join('photos', 'test_assets', filename)
             if not os.path.exists(img_path):
@@ -31,10 +33,10 @@ class Command(BaseCommand):
             PhotoImage.objects.create(
                 photo=photo,
                 image=image_file,
-                description=""  # Optional description
+                description=""  
             )
 
-        # Add biometric data (e.g., heart rate readings)
+        # Add heartrate
         base_time = make_aware(datetime(2025, 5, 1, 8, 0))
         for i in range(2000):
             BiometricData.objects.create(

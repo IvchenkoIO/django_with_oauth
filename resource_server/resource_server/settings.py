@@ -7,22 +7,18 @@ from urllib.parse import urlparse
 import os
 import requests
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# Quick-start development settings
 SECRET_KEY = 'django-insecure-lyo(+5&g+-fwojm1=%jfnh7_8-#f3pdrh27l9qj@w8%z1u2dy#'
 DEBUG = True
 
 def get_ngrok_url():
     try:
         response = requests.get("http://ngrok:4040/api/tunnels")
-        # Debug: print the response text
         print("Response from ngrok API:", response.text)
         data = response.json()
         tunnels = data.get('tunnels', [])
         if tunnels:
-            # For simplicity, use the first tunnel's public_url
             return tunnels[0].get('public_url')
         else:
             print("No tunnels found in the response.")
@@ -40,7 +36,6 @@ ALLOWED_HOSTS = [
     
 ]
 
-# Application definition
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -85,7 +80,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'resource_server.wsgi.application'
 
-# Database
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
@@ -97,7 +91,6 @@ DATABASES = {
     }
 }
 
-# Password validation
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
     {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
@@ -105,35 +98,26 @@ AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
 ]
 
-# Internationalization
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
 
-# Static files
 STATIC_URL = 'static/'
 
-# Media files (uploaded images)
 MEDIA_URL = '/resource/photos/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'photos') 
 
-
-# Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# JWT settings
 JWT_PUBLIC_KEY = open('resource_server/keys/public.pem').read()
 JWT_ALGORITHM = 'RS256'
 
-# Proxy settings
 USE_X_FORWARDED_HOST = True
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
-# Cross-origin settings
 CORS_ALLOW_ALL_ORIGINS = True
 
-# Secure cookies for cross-domain with ngrok
 SESSION_COOKIE_DOMAIN = '.ngrok-free.app'
 SESSION_COOKIE_PATH = '/resource/'
 SESSION_COOKIE_SAMESITE = None

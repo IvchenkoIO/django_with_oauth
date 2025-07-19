@@ -14,7 +14,6 @@ def get_blurred_image_url(image_path, request, blur_level="medium"):
             width, height = img.size
             base = min(width, height)
 
-            # Get multiplier from config, default to medium if missing
             multiplier = BLUR_STRENGTH.get(blur_level, BLUR_STRENGTH.get("medium", 0.03))
             radius = max(1, int(base * multiplier))
 

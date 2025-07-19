@@ -1,3 +1,5 @@
+# privacy transformation config file
+
 BLUR_STRENGTH = {
     "mild": 0.01,
     "medium": 0.03,
