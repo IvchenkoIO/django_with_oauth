@@ -1,1 +1,1 @@
-# django_with_oauth
+# Installation and Tutorial
