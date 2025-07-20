@@ -17,7 +17,6 @@ from django.db.models import JSONField
 from oauth2_provider.models import AbstractGrant
 
 class CustomGrant(AbstractGrant):
-    
 	"""
     Extended grant model that captures user-defined policy levels for an OAuth2 authorization code.
 
@@ -26,5 +25,6 @@ class CustomGrant(AbstractGrant):
                                    e.g., {"average numerical values?": "hourly", ...}.
                                    
     """
+
 
     policy_levels = JSONField(null=True, blank=True)
