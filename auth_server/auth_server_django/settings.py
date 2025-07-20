@@ -16,19 +16,26 @@ import os
 from jwt_app.jwt_generator import generate_jwt
 from urllib.parse import urlparse
 import requests
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
+from decouple import config
+# ─── BASE DIRECTORY ──────────────────────────────────────────────────────────
+# Build paths inside the project like BASE_DIR / 'subdir'
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-d!o-c^wvw*s6w*etp$m=8r282#frg4j%5q%h*l!nnq49658m#%'
-
+# ─── SECURITY & DEBUG ───────────────────────────────────────────────────────
+# Secret key should be kept in environment for production
+SECRET_KEY = config('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+
+# ──────────────────────────────────────────────────────────────────────────────
+# Dynamic Ngrok URL Fetcher
+# ──────────────────────────────────────────────────────────────────────────────
+# If running behind ngrok in Docker, fetch the public URL from ngrok's API
 def get_ngrok_url():
     try:
         response = requests.get("http://ngrok:4040/api/tunnels")
@@ -45,8 +52,13 @@ def get_ngrok_url():
         print("Error fetching ngrok URL:", e)
     return None
 
-
+# NGROK_URL used to build callbacks and endpoints dynamically
 NGROK_URL = get_ngrok_url()
+
+# ──────────────────────────────────────────────────────────────────────────────
+# Host & Cookie Settings
+# ──────────────────────────────────────────────────────────────────────────────
+# Derive allowed host and session cookie domain from ngrok URL
 SESSION_COOKIE_DOMAIN = urlparse(NGROK_URL).hostname
 
 CSRF_TRUSTED_ORIGINS = [ NGROK_URL,]
@@ -57,17 +69,21 @@ ALLOWED_HOSTS = [
 ]
 
 
-# Application definition
-
+# ──────────────────────────────────────────────────────────────────────────────
+# Email Settings
+# ──────────────────────────────────────────────────────────────────────────────
+# Derive allowed host and session cookie domain from ngrok URL
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'privacyengproj@gmail.com'
-EMAIL_HOST_PASSWORD = 'ckvq pbli becs imfz'
+EMAIL_HOST_USER = config('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
 
 
-
+# ──────────────────────────────────────────────────────────────────────────────
+# Application Definition
+# ──────────────────────────────────────────────────────────────────────────────
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -95,6 +111,10 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'auth_server_django.urls'
 
+
+# ──────────────────────────────────────────────────────────────────────────────
+# Templates
+# ──────────────────────────────────────────────────────────────────────────────
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -115,9 +135,10 @@ TEMPLATES = [
 WSGI_APPLICATION = 'auth_server_django.wsgi.application'
 
 
+# ──────────────────────────────────────────────────────────────────────────────
 # Database
+# ──────────────────────────────────────────────────────────────────────────────
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -126,9 +147,11 @@ DATABASES = {
 }
 
 
-# Password validation
-# https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
+# ──────────────────────────────────────────────────────────────────────────────
+# Password Validation
+# ──────────────────────────────────────────────────────────────────────────────
 
+# https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -145,9 +168,11 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
+# ──────────────────────────────────────────────────────────────────────────────
 # Internationalization
-# https://docs.djangoproject.com/en/5.1/topics/i18n/
+# ──────────────────────────────────────────────────────────────────────────────
 
+# https://docs.djangoproject.com/en/5.1/topics/i18n/
 LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'UTC'
@@ -157,7 +182,10 @@ USE_I18N = True
 USE_TZ = True
 
 
-# Static files (CSS, JavaScript, Images)
+# ──────────────────────────────────────────────────────────────────────────────
+# Static Files
+# ──────────────────────────────────────────────────────────────────────────────
+
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = 'static/'
@@ -165,16 +193,23 @@ STATIC_URL = 'static/'
 # The directory `collectstatic` will dump into.
 # Match this to your Docker volume mount.
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-# Default primary key field type
+
+# ──────────────────────────────────────────────────────────────────────────────
+# Default Primary Key Field
+# ──────────────────────────────────────────────────────────────────────────────
+
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+# ──────────────────────────────────────────────────────────────────────────────
+# URLS
+# ──────────────────────────────────────────────────────────────────────────────
 
 #LOGIN_URL = '/admin/login/'
-FORCE_SCRIPT_NAME = '/auth'
-LOGIN_URL = '/auth/admin/login/'
-LOGIN_REDIRECT_URL = '/auth/o/authorize/'
+FORCE_SCRIPT_NAME = config('FORCE_SCRIPT_NAME')
+LOGIN_URL = config('LOGIN_URL')
+LOGIN_REDIRECT_URL = config('LOGIN_REDIRECT_URL')
 
 
 
@@ -184,6 +219,9 @@ JWT_ALGORITHM = 'RS256'
 # settings.py
 
 # … your other settings …
+# ──────────────────────────────────────────────────────────────────────────────
+# OAUTH Settings
+# ──────────────────────────────────────────────────────────────────────────────
 
 # Tells DOT “I’m using the built-in oauth2_provider.Application model”
 OAUTH2_PROVIDER_APPLICATION_MODEL = "oauth2_provider.Application"
@@ -192,7 +230,6 @@ OAUTH2_PROVIDER = {
     'ACCESS_TOKEN_EXPIRE_SECONDS': 36000,
     'SCOPES': {
         'read': 'Read scope',
-        'partial read': 'Partial read scope',
     },
     'POLICY_LEVELS': {
         'average numerical values?': ['none', 'hourly', '8-hourly', 'daily'],

@@ -5,4 +5,5 @@ django-sslserver
 requests
 PyJWT
 gunicorn
+python-decouple
 cryptography
