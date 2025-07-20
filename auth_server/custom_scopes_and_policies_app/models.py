@@ -17,7 +17,7 @@ from django.db.models import JSONField
 from oauth2_provider.models import AbstractGrant
 
 class CustomGrant(AbstractGrant):
-	"""
+    """
     Extended grant model that captures user-defined policy levels for an OAuth2 authorization code.
 
     Inherits all fields from AbstractGrant (code, application, user, expires, redirect_uri, scope) and adds:
