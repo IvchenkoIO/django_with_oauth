@@ -1,0 +1,176 @@
+=============================================================================
+1000 requests / 10 in parallel 
+avg num values : none | blur : none | transform data : none |
+
+Server Software:        nginx/1.29.0
+Server Hostname:        privacyengproj.ngrok.app
+Server Port:            443
+SSL/TLS Protocol:       TLSv1.3,TLS_AES_128_GCM_SHA256,256,128
+Server Temp Key:        X25519 253 bits
+TLS Server Name:        privacyengproj.ngrok.app
+
+Document Path:          /client/login/
+Document Length:        199049 bytes
+
+Concurrency Level:      10
+Time taken for tests:   1205.383 seconds
+Complete requests:      1000
+Failed requests:        5
+   (Connect: 0, Receive: 0, Length: 5, Exceptions: 0)
+Total transferred:      198350220 bytes
+HTML transferred:       198067792 bytes
+Requests per second:    0.83 [#/sec] (mean)
+Time per request:       12053.834 [ms] (mean)
+Time per request:       1205.383 [ms] (mean, across all concurrent requests)
+Transfer rate:          160.70 [Kbytes/sec] received
+
+Connection Times (ms)
+              min  mean[+/-sd] median   max
+Connect:       59  189 140.8    145    1792
+Processing:     0 11781 3776.8  11034   30756
+Waiting:        0 11336 3622.0  10609   30025
+Total:       1607 11969 3792.8  11221   30943
+
+Percentage of the requests served within a certain time (ms)
+  50%  11221
+  66%  12809
+  75%  14039
+  80%  14701
+  90%  16926
+  95%  19221
+  98%  21027
+  99%  24866
+ 100%  30943 (longest request)
+
+=============================================================================
+1000 requests / 5 in parallel 
+avg num values : none | blur : none | transform data : none |
+
+
+Server Software:        nginx/1.29.0
+Server Hostname:        privacyengproj.ngrok.app
+Server Port:            443
+SSL/TLS Protocol:       TLSv1.3,TLS_AES_128_GCM_SHA256,256,128
+Server Temp Key:        X25519 253 bits
+TLS Server Name:        privacyengproj.ngrok.app
+
+Document Path:          /client/login/
+Document Length:        199049 bytes
+
+Concurrency Level:      5
+Time taken for tests:   1719.907 seconds
+Complete requests:      1000
+Failed requests:        29
+   (Connect: 0, Receive: 0, Length: 29, Exceptions: 0)
+Total transferred:      193695332 bytes
+HTML transferred:       193412390 bytes
+Requests per second:    0.58 [#/sec] (mean)
+Time per request:       8599.537 [ms] (mean)
+Time per request:       1719.907 [ms] (mean, across all concurrent requests)
+Transfer rate:          109.98 [Kbytes/sec] received
+
+Connection Times (ms)
+              min  mean[+/-sd] median   max
+Connect:       59  200 149.4    153    1922
+Processing:  1233 8373 7137.2   5769   55888
+Waiting:     1040 7926 7091.2   5317   55884
+Total:       1357 8573 7162.0   5952   56005
+
+Percentage of the requests served within a certain time (ms)
+  50%   5952
+  66%   7294
+  75%   8973
+  80%  10797
+  90%  16785
+  95%  24867
+  98%  32063
+  99%  36234
+ 100%  56005 (longest request)
+
+=============================================================================
+1000 requests / 5 in parallel 
+avg num values : daily | blur : heavy | transform data : remove |
+
+Server Software:        nginx/1.29.0
+Server Hostname:        privacyengproj.ngrok.app
+Server Port:            443
+SSL/TLS Protocol:       TLSv1.3,TLS_AES_128_GCM_SHA256,256,128
+Server Temp Key:        X25519 253 bits
+TLS Server Name:        privacyengproj.ngrok.app
+
+Document Path:          /client/login/
+Document Length:        5803 bytes
+
+Concurrency Level:      5
+Time taken for tests:   1268.769 seconds
+Complete requests:      1000
+Failed requests:        2
+   (Connect: 0, Receive: 0, Length: 2, Exceptions: 0)
+Total transferred:      6081746 bytes
+HTML transferred:       5800746 bytes
+Requests per second:    0.79 [#/sec] (mean)
+Time per request:       6343.845 [ms] (mean)
+Time per request:       1268.769 [ms] (mean, across all concurrent requests)
+Transfer rate:          4.68 [Kbytes/sec] received
+
+Connection Times (ms)
+              min  mean[+/-sd] median   max
+Connect:       61  165 205.5    117    4225
+Processing:  1606 6153 2097.1   5909   12480
+Waiting:     1603 6143 2096.5   5897   12479
+Total:       1802 6318 2124.5   6097   12642
+
+Percentage of the requests served within a certain time (ms)
+  50%   6097
+  66%   6941
+  75%   7555
+  80%   8048
+  90%   9558
+  95%  10409
+  98%  11194
+  99%  11669
+ 100%  12642 (longest request)
+
+=============================================================================
+1000 requests / 5 in parallel 
+avg num values : 8-hour | blur : medium | transform data : anon |
+
+Server Software:        nginx/1.29.0
+Server Hostname:        privacyengproj.ngrok.app
+Server Port:            443
+SSL/TLS Protocol:       TLSv1.3,TLS_AES_128_GCM_SHA256,256,128
+Server Temp Key:        X25519 253 bits
+TLS Server Name:        privacyengproj.ngrok.app
+
+Document Path:          /client/login/
+Document Length:        7365 bytes
+
+Concurrency Level:      5
+Time taken for tests:   1484.984 seconds
+Complete requests:      1000
+Failed requests:        2
+   (Connect: 0, Receive: 0, Length: 2, Exceptions: 0)
+Total transferred:      7635674 bytes
+HTML transferred:       7354955 bytes
+Requests per second:    0.67 [#/sec] (mean)
+Time per request:       7424.922 [ms] (mean)
+Time per request:       1484.984 [ms] (mean, across all concurrent requests)
+Transfer rate:          5.02 [Kbytes/sec] received
+
+Connection Times (ms)
+              min  mean[+/-sd] median   max
+Connect:       60  148 310.3    109    9172
+Processing:   923 7255 1719.8   6897   17422
+Waiting:        0 7245 1724.5   6885   17422
+Total:       1028 7403 1755.2   7037   17662
+
+Percentage of the requests served within a certain time (ms)
+  50%   7037
+  66%   7663
+  75%   8090
+  80%   8444
+  90%   9475
+  95%  10633
+  98%  12224
+  99%  13465
+ 100%  17662 (longest request)
