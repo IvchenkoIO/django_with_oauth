@@ -71,14 +71,6 @@ The client service will automatically fetch its configuration (NGROK\_URL, OAuth
 
 ---
 
-## ⚙️ Configuration
-
-- `` loads all URLs and secrets from `.env` via `python-decouple`.
-- **NGROK\_URL** is automatically fetched from the local ngrok API when running in Docker.
-- Ensure `` matches your SSL requirements.
-
----
-
 ## 📜 Testing
 
 - No tests included by default; consider adding `client_app/tests.py` for unit and integration tests of the OAuth flow.
