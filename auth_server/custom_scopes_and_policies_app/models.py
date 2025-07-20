@@ -24,6 +24,7 @@ class CustomGrant(AbstractGrant):
     Inherits all fields from AbstractGrant (code, application, user, expires, redirect_uri, scope) and adds:
         policy_levels (JSONField): Stores a mapping of data types to selected policy levels,
                                    e.g., {"average numerical values?": "hourly", ...}.
+                                   
     """
 
     policy_levels = JSONField(null=True, blank=True)

@@ -3,7 +3,10 @@ from django.apps import AppConfig
 
 class CustomScopesAndPoliciesAppConfig(AppConfig):
     
+	
+
 	"""
+
     Configuration class for the custom scopes and policies app.
 
     Attributes:
