@@ -94,7 +94,6 @@ def protected_photos(request):
     else:
         numerical = group_by_interval(grouping)
         
-    # Grouping and averaging biometrics
     return JsonResponse({
         "patient": {
             "name": name,
