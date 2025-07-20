@@ -62,9 +62,11 @@ This directory contains the Resource Server. It includes a PostgreSQL database w
 
 ## Tests
 
-Tests were done manually by generating different tokens for the different modes and accessing the endpoint with a curl command while measuring the time.
-After every test, the resource_server was restarted. Otherwise response times go down ~20%, which I would attribute to warmup effects such as cache hits.
+Tests were done manually by generating different tokens for the different modes and accessing the endpoint with a PowerShell's Invoke-WebRequest while measuring the time.
+After every test, the resource_server was restarted. Otherwise response times go down ~20%, which could be attributed to warmup effects such as cache hits.
 If the resource server is left idle for a while, response time increases by about 0.2 seconds. In rare instances, access time was more than 3 seconds, which is very different from the usual 0.3 - 0.8 seconds. To achieve comparability, and since the purpose of these tests was the performance of the actual transformations, all tests were done exactly 30 seconds after restart.
+
+
 An example is pictured below:
 
 Go to:
@@ -102,7 +104,7 @@ $end = Get-Date
 "Status: $($response.StatusCode)"
 "Elapsed time: $((($end - $start).TotalSeconds)) sec"
 
-# Results:
+## Results:
 
 ### Benchmark Processing Time of Privacy Transformations (in seconds)
 
