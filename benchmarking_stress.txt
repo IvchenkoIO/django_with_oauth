@@ -1,3 +1,5 @@
+Benchmarking using Apache Bench for "stress-testing"
+
 =============================================================================
 1000 requests / 10 in parallel 
 avg num values : none | blur : none | transform data : none |
